@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OTP Verification</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            background-size: cover;
+            font-family: sans-serif;
+            color: white;
+        }
+
+        .form {
+            background-color: #003;
+            border-radius: 7px;
+            margin-top: 1px;
+            border: 2px solid #003;
+            padding: 0px 37px 38px 27px;
+            width: 450px;
+        }
+
+        .send {
+            position: absolute;
+            top: 210px;
+            left: 35px;
+        }
+        .otpverify{
+          position: absolute;
+            top: 210px;
+            left:200px;
+
+        }
+
+        .registration-form p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+    .registration-form {
+        position: absolute;
+        top: 30%;
+        left: 33%;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .registration-form.show {
+        opacity: 1;
+        transform: scale(1);
+    }
+</style>
+<script>
+    window.onload = function() {
+        var container = document.querySelector(".registration-form");
+        container.classList.add("show");
+    };
+</script>
+
+</head>
+<body>
+    <header>
+        <a href="home.html">Certificate Verification </a>
+        <ul id="menu"></ul>
+    </header>
+    <div class="registration-form">
+        <form class="form" id="otpForm">
+            <br>
+            <p>OTP VERIFICATION</p>
+            <input type="email" id="email" placeholder="Enter email for OTP" required><br><br>
+            <input type="text" id="otp" placeholder="Enter OTP"><br><br><br>
+            <div class="otpverify">
+                <button class="btn btn-primary">Verify OTP</button>
+            </div>
+        </form>
+        <div class="send">
+            <button type="button" class="btn btn-primary" id="sendOTP">Send OTP</button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            var otp; // Variable to store the OTP
+
+            // Function to send OTP via email
+            function sendOTP(email) {
+                $.ajax({
+                    url: 'send_otp.php',
+                    type: 'POST',
+                    data: { email: email },
+                    success: function(response) {
+                        otp = response;
+                        alert('OTP sent to ' + email);
+                    },
+                    error: function() {
+                        alert('Error sending OTP. Please try again later.');
+                    }
+                });
+            }
+
+            // Event handler for the form submission
+            $('#otpForm').submit(function(e) {
+                e.preventDefault();
+                var userOTP = $('#otp').val();
+
+                if (userOTP === otp) {
+                    alert('OTP verified!');
+                    window.location.href = 'verify.html';
+                } else {
+                    alert('OTP not verified!');
+                    location.reload();
+                }
+            });
+
+            // Event handler for sending OTP
+            $('#sendOTP').click(function() {
+                var userEmail = $('#email').val();
+                sendOTP(userEmail);
+            });
+        });
+    </script>
+</body>
+</html>

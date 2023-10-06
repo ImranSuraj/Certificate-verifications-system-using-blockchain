@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Verification Using Blockchain</title>
+    <link rel="stylesheet" href="style.css">
+	<style>
+		body {
+			background-size: cover;
+			font-family: sans-serif;
+			color:white;
+			
+			
+		}
+	 
+		
+		form{
+			background-color:#003;
+			border-radius: 10px;
+			padding:10px 30px 75px 23px;
+			width: 400px;		
+	
+}
+input::placeholder {
+    font-weight:sans-serif;
+    font-size: 18px;
+    text-align: center;
+    color:black;
+}
+	 
+	   
+	   
+		@media screen and (max-width: 600px) {
+			form {
+				width: 100%;
+			}
+		}
+	</style>
+    
+</head>
+
+<body>
+   
+    <header>
+        <a href="index.html">Certificate Verification</a>
+        <ul id="menu">
+           
+        </ul>
+    </header>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.2.8/dist/web3.js"></script>
+<script>        
+var account;
+window.addEventListener('load', async () => {
+
+
+    if (typeof window.ethereum !== 'undefined') { 
+        console.log("MetaMask is Available :) !"); 
+        }
+        
+    // Modern DApp browsers
+    if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        
+        // To prevent the page reloading when the MetaMask network changes
+        ethereum.autoRefreshOnNetworkChange = false;
+        
+        // To Capture the account details from MetaMask
+        const accounts = await ethereum.enable();
+        account = accounts[0];
+            
+        }
+    // Legacy DApp browsers
+    else if (window.web3) {
+        //window.web3 = new Web3(web3.currentProvider);
+        window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/cbd9dc11b30147e9a2cc974be655ef7c")); 
+        }
+    // Non-DApp browsers
+    else {
+        console.log('Non-Ethereum browser detected. Please install MetaMask');
+        }
+        
+        });
+    
+        
+        var abi=[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "FileHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			}
+		],
+		"name": "certifyFile",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "FileHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			}
+		],
+		"name": "FileCertified",
+		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "FileHash",
+				"type": "string"
+			}
+		],
+		"name": "verifyFile",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+          var contractAddress = '0x4D46A584ecEC3A5F4D18085A3338Dff2043d0704';
+          </script>
+        <div class="registration-form1">
+            <form >
+                <p style="text-align:center; font-family:sans-serif;">Get Certificate Details</p>
+                 <input id="hash1" type="text" name="hash1" placeholder="Enter hash of file" required>
+                <br>
+				<input id="addbutton1" type="button" onclick="check_hash()" value="Verify Certificate">
+
+				<br>
+				
+			</form>
+				
+        </div>
+		
+        <script>   
+		    
+            function check_hash() {
+            var myContract = new web3.eth.Contract(abi,contractAddress, {from: account});
+            var idd = document.getElementById("hash1").value;
+             var result = myContract.methods.verifyFile(idd).call(function (err, result) {
+                if (err) { console.log(err); }
+						if (result[0]=="yes") {
+						alert("NAME:  "+result[1]+"\n"+"ID:  "
+						+result[2]+"\n"+"DATE:  "+result[3]+"\n"+"COURSE:  "+result[4]
+						+"\n"+"                                                              	Click OK to see the certificate");
+						
+						setTimeout(function() {
+  						window.location.href = "https://gateway.pinata.cloud/ipfs/" + idd;
+						}, 100);
+                    
+                }
+                else{ 
+                    
+                    location.reload();
+                    alert("Certificate not verified");
+                          
+                }
+               
+                });		
+			}
+		        
+</script>
+</body>
+
+</html>

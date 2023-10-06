@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Verification Using Blockchain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <header>
+            <a href="index.html">Certificate Verification</a>
+            <ul id="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Adminlogin.html">Admin</a></li>
+                <li><a href="registration.html">User</a></li>
+                <button onclick="connectMetamask()" id="meta">Connect</button>
+                
+
+            </ul>
+           
+        </header>
+		<br>
+		
+	<br>
+	<br><br>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.2.8/dist/web3.js"></script>
+    <script>
+        var account;
+			const connectMetamask = async () => 
+      {
+				if(window.ethereum !== "undefined"){
+					const accounts = await ethereum.request({method: "eth_requestAccounts"});
+                    account=accounts[0];
+            const provider = window.ethereum;
+
+// Get the network ID of the currently selected network
+provider.request({ method: 'net_version' })
+  .then(networkId => {
+    // Map the network ID to a human-readable network name
+    let networkName = '';
+    switch (networkId) {
+      case '80001':
+        networkName = 'Polygon Testnet';
+        break;
+      case '5':
+        networkName = 'Goerli test network';
+        break;
+        case '11155111':
+        networkName = 'Sepolia test network';
+        break;
+        case '5777':
+        networkName = 'Ganache';
+        break;
+      
+      default:
+        networkName = 'Unknown';
+        break;
+    }
+
+    // Show an alert with the network name
+    alert("Account: "+account+"\n"+"Testnet: "+networkName) 
+    
+  })
+  .catch(err => console.error(err));
+            
+				}
+	
+			}
+      
+     </script>
+       <script src="Admin.html"></script>
+      <script src="verify.html"></script>
+		
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

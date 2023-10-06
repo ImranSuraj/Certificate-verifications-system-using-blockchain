@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Verification Using Blockchain</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    body {
+        background-size: cover;
+        font-family: sans-serif;
+        color:white;
+        
+        
+    }
+ 
+    
+    form {
+        background-color:#003;
+        border-radius:7px;
+		border: 2px solid #003;
+        padding:0px 37px 38px 27px;
+		height: 472px;
+        width: 450px;
+       
+    }
+ 
+   
+   
+    @media screen and (max-width: 600px) {
+        form {
+            width: 100%;
+        }
+    }
+</style>
+
+<body>
+    <header>
+        <a href="index.html">Certificate Verification</a>
+        <ul id="menu">
+
+    <input type="file" id="fileselector"  onchange="javascript:uploadfile();">
+        </ul>  
+    </header>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>  
+const API_KEY = '18cadb8df5c2041440a5';
+      const API_SECRET = 'fd8c62ac769b3b38b646dc594bdef600f3c75defe21dbe9fdc0d70561909274c';
+ async function uploadfile() {
+        const file = document.getElementById('fileselector').files[0];
+        if (!file) {
+          alert('Please select a file to upload');
+          return;
+        }
+        const formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+          url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
+          method: 'POST',
+          headers: {
+            'pinata_api_key': API_KEY,
+            'pinata_secret_api_key': API_SECRET
+          },
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function(response) {
+            alert('IPFS hash: '+ response.IpfsHash);
+          },
+          error: function(error) {
+            console.log(error);
+            alert('File upload failed. Please try again later.');
+          }
+        });
+      } 
+      </script> 
+      <script src="https://cdn.jsdelivr.net/npm/web3@1.2.8/dist/web3.js"></script>    
+      <script>
+var account;
+window.addEventListener('load', async () => {
+
+
+    if (typeof window.ethereum !== 'undefined') { 
+        console.log("MetaMask is Available :) !"); 
+        }
+        
+    // Modern DApp browsers
+    if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        
+        // To prevent the page reloading when the MetaMask network changes
+        ethereum.autoRefreshOnNetworkChange = false;
+        
+        // To Capture the account details from MetaMask
+        const accounts = await ethereum.enable();
+        account = accounts[0];
+            
+        }
+    // Legacy DApp browsers
+    else if (window.web3) {
+        //window.web3 = new Web3(web3.currentProvider);
+        window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/cbd9dc11b30147e9a2cc974be655ef7c")); 
+        }
+    // Non-DApp browsers
+    else {
+        console.log('Non-Ethereum browser detected. Please install MetaMask');
+        }
+        
+        });
+    
+    var abi =[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "FileHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			}
+		],
+		"name": "certifyFile",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "FileHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			}
+		],
+		"name": "FileCertified",
+		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "FileHash",
+				"type": "string"
+			}
+		],
+		"name": "verifyFile",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+			
+var contractAddress = '0x4D46A584ecEC3A5F4D18085A3338Dff2043d0704';
+
+function add_details() 
+{ 
+	var myContract = new web3.eth.Contract(abi,contractAddress, {from: account});
+	var ds1 = document.getElementById("ID").value;
+	var ds2 = document.getElementById("username").value;
+    var ds3= document.getElementById("hash").value;
+	var ds4 = document.getElementById("date").value;
+	var ds5 = document.getElementById("course").value;
+    if (ds1 === "" || ds2 === "" || ds3 === "" || ds4 === "" || ds5=== "" ) 
+    {
+        event.preventDefault();
+        alert("All fields must be filled");
+      return 
+    }	
+	else{
+	alert("ID: "+ds1+"\n"+ "NAME: "+ds2+"\n"+"HASH: "+ds3+"\n"+"DATE: "+ds4+"\n"+"COURSE: "+ds5);
+		
+	}		
+	var result = myContract.methods.certifyFile(ds1,ds2,ds3,ds4,ds5).send(function (err, result) 
+    {
+		if (err) { console.log(err); }
+                if (result) { document.getElementById("result").innerHTML = result; }
+               
+    });		
+}
+   
+    </script> 
+<div class="registration-form">
+	
+    <form>
+		<p style=" text-align:center " >Add Data to Blockchain</p>
+       <p> <input type="number" id="ID" name="ID" placeholder="Enter Certificate ID" required></p>
+       <p> <input type="text" id="username" name="username" placeholder="Enter your name" required></p>
+	   <p> <input type="text" id="collegename" name="collegename" placeholder="Enter college name" required></p>
+       <p> <input type="date" id="date" name="date" placeholder="Enter issue date " required></p>
+       <p> <input type="text" id="course" name="course" placeholder="Enter your course" required></p>
+	   <p> <input type="text" id="hash" name="hash" placeholder="Enter Certificate hash" required></p>
+	   <p><input id="addbutton" type="button" onclick="add_details()" value="Submit"> </p>
+	   <br>
+	</form>
+	
+	
+</div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
